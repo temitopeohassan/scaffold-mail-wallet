@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Address } from "@scaffold-ui/components";
 import { Hash, Transaction, TransactionReceipt, formatEther, formatUnits } from "viem";
 import { hardhat } from "viem/chains";
 import { usePublicClient } from "wagmi";
+import { Address } from "~~/components/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { decodeTransactionData, getFunctionDetails } from "~~/utils/scaffold-eth";
 import { replacer } from "~~/utils/scaffold-eth/common";
@@ -64,14 +64,7 @@ const TransactionComp = ({ txHash }: { txHash: Hash }) => {
                   <strong>From:</strong>
                 </td>
                 <td>
-                  <Address
-                    address={transaction.from}
-                    format="long"
-                    onlyEnsOrAddress
-                    blockExplorerAddressLink={
-                      targetNetwork.id === hardhat.id ? `/blockexplorer/address/${transaction.from}` : undefined
-                    }
-                  />
+                  <Address address={transaction.from} format="long" onlyEnsOrAddress />
                 </td>
               </tr>
               <tr>
@@ -80,29 +73,11 @@ const TransactionComp = ({ txHash }: { txHash: Hash }) => {
                 </td>
                 <td>
                   {!receipt?.contractAddress ? (
-                    transaction.to && (
-                      <Address
-                        address={transaction.to}
-                        format="long"
-                        onlyEnsOrAddress
-                        blockExplorerAddressLink={
-                          targetNetwork.id === hardhat.id ? `/blockexplorer/address/${transaction.to}` : undefined
-                        }
-                      />
-                    )
+                    transaction.to && <Address address={transaction.to} format="long" onlyEnsOrAddress />
                   ) : (
                     <span>
                       Contract Creation:
-                      <Address
-                        address={receipt.contractAddress}
-                        format="long"
-                        onlyEnsOrAddress
-                        blockExplorerAddressLink={
-                          targetNetwork.id === hardhat.id
-                            ? `/blockexplorer/address/${receipt.contractAddress}`
-                            : undefined
-                        }
-                      />
+                      <Address address={receipt.contractAddress} format="long" onlyEnsOrAddress />
                     </span>
                   )}
                 </td>
@@ -143,11 +118,7 @@ const TransactionComp = ({ txHash }: { txHash: Hash }) => {
                   <strong>Data:</strong>
                 </td>
                 <td className="form-control">
-                  <textarea
-                    readOnly
-                    value={transaction.input}
-                    className="p-0 w-full textarea-primary bg-inherit h-[150px]"
-                  />
+                  <textarea readOnly value={transaction.input} className="p-0 textarea-primary bg-inherit h-[150px]" />
                 </td>
               </tr>
               <tr>

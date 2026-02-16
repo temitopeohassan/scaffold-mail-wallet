@@ -1,14 +1,13 @@
 import fs from "fs";
 import path from "path";
-import { Address } from "viem";
-import { hardhat } from "viem/chains";
+import { foundry } from "viem/chains";
 import { AddressComponent } from "~~/app/blockexplorer/_components/AddressComponent";
 import deployedContracts from "~~/contracts/deployedContracts";
 import { isZeroAddress } from "~~/utils/scaffold-eth/common";
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 type PageProps = {
-  params: Promise<{ address: Address }>;
+  params: { address: string };
 };
 
 async function fetchByteCodeAndAssembly(buildInfoDirectory: string, contractPath: string) {
@@ -37,14 +36,9 @@ async function fetchByteCodeAndAssembly(buildInfoDirectory: string, contractPath
   return { bytecode, assembly };
 }
 
-const getContractData = async (address: Address) => {
+const getContractData = async (address: string) => {
   const contracts = deployedContracts as GenericContractsDeclaration | null;
-  const chainId = hardhat.id;
-
-  if (!contracts || !contracts[chainId] || Object.keys(contracts[chainId]).length === 0) {
-    return null;
-  }
-
+  const chainId = foundry.id;
   let contractPath = "";
 
   const buildInfoDirectory = path.join(
@@ -56,8 +50,8 @@ const getContractData = async (address: Address) => {
     "..",
     "..",
     "..",
-    "hardhat",
-    "artifacts",
+    "foundry",
+    "out",
     "build-info",
   );
 
@@ -65,7 +59,7 @@ const getContractData = async (address: Address) => {
     throw new Error(`Directory ${buildInfoDirectory} not found.`);
   }
 
-  const deployedContractsOnChain = contracts[chainId];
+  const deployedContractsOnChain = contracts ? contracts[chainId] : {};
   for (const [contractName, contractInfo] of Object.entries(deployedContractsOnChain)) {
     if (contractInfo.address.toLowerCase() === address.toLowerCase()) {
       contractPath = `contracts/${contractName}.sol`;
@@ -88,9 +82,8 @@ export function generateStaticParams() {
   return [{ address: "0x0000000000000000000000000000000000000000" }];
 }
 
-const AddressPage = async (props: PageProps) => {
-  const params = await props.params;
-  const address = params?.address as Address;
+const AddressPage = async ({ params }: PageProps) => {
+  const address = params?.address as string;
 
   if (isZeroAddress(address)) return null;
 

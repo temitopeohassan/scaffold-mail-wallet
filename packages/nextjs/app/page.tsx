@@ -1,81 +1,102 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { Address } from "@scaffold-ui/components";
-import type { NextPage } from "next";
-import { hardhat } from "viem/chains";
-import { useAccount } from "wagmi";
-import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useTargetNetwork } from "~~/hooks/scaffold-eth";
+import React, { useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Wallet, Shield, Zap, Users, ArrowRight } from 'lucide-react';
 
-const Home: NextPage = () => {
-  const { address: connectedAddress } = useAccount();
-  const { targetNetwork } = useTargetNetwork();
+export default function HomePage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.push('/dashboard');
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div className="flex items-center flex-col grow pt-10">
-        <div className="px-5">
-          <h1 className="text-center">
-            <span className="block text-2xl mb-2">Welcome to</span>
-            <span className="block text-4xl font-bold">Scaffold-ETH 2</span>
-          </h1>
-          <div className="flex justify-center items-center space-x-2 flex-col">
-            <p className="my-2 font-medium">Connected Address:</p>
-            <Address
-              address={connectedAddress}
-              chain={targetNetwork}
-              blockExplorerAddressLink={
-                targetNetwork.id === hardhat.id ? `/blockexplorer/address/${connectedAddress}` : undefined
-              }
-            />
-          </div>
-
-          <p className="text-center text-lg">
-            Get started by editing{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/nextjs/app/page.tsx
-            </code>
-          </p>
-          <p className="text-center text-lg">
-            Edit your smart contract{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              YourContract.sol
-            </code>{" "}
-            in{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/hardhat/contracts
-            </code>
-          </p>
-        </div>
-
-        <div className="grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col md:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <BugAntIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Tinker with your smart contract using the{" "}
-                <Link href="/debug" passHref className="link">
-                  Debug Contracts
-                </Link>{" "}
-                tab.
+    <div className="min-h-screen gradient-bg">
+      {/* Hero Section */}
+      <div className="hero min-h-[80vh]">
+        <div className="hero-content text-center">
+          <div className="max-w-4xl">
+            <div className="mb-8">
+              <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
+                <Wallet className="w-10 h-10 text-white" />
+              </div>
+              <h1 className="text-5xl font-bold text-balance mb-6">
+                Your Gateway to the <span className="text-primary">Ethereum</span> Ecosystem
+              </h1>
+              <p className="text-xl text-base-content/70 max-w-2xl mx-auto text-balance">
+                Generate secure Ethereum wallets instantly. Simple, secure, and user-friendly 
+                wallet creation with enterprise-grade security.
               </p>
             </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Explore your local transactions with the{" "}
-                <Link href="/blockexplorer" passHref className="link">
-                  Block Explorer
-                </Link>{" "}
-                tab.
-              </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+              <Link href="/auth/signup" className="btn btn-ethereum btn-lg">
+                Create Your Wallet
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link href="/auth/login" className="btn btn-outline btn-lg">
+                Sign In
+              </Link>
+            </div>
+
+            {/* Features Grid */}
+            <div className="grid md:grid-cols-3 gap-8 mt-16">
+              <div className="card bg-base-100 shadow-xl card-hover">
+                <div className="card-body text-center">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <Shield className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="card-title justify-center">Bank-Grade Security</h3>
+                  <p className="text-base-content/70">
+                    Your private keys are never stored on our servers. 
+                    Generate wallets securely with industry-standard encryption.
+                  </p>
+                </div>
+              </div>
+
+              <div className="card bg-base-100 shadow-xl card-hover">
+                <div className="card-body text-center">
+                  <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <Zap className="w-6 h-6 text-secondary" />
+                  </div>
+                  <h3 className="card-title justify-center">Instant Generation</h3>
+                  <p className="text-base-content/70">
+                    Create your Ethereum wallet in seconds. 
+                    No waiting, no complicated setup process.
+                  </p>
+                </div>
+              </div>
+
+              <div className="card bg-base-100 shadow-xl card-hover">
+                <div className="card-body text-center">
+                  <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <Users className="w-6 h-6 text-accent" />
+                  </div>
+                  <h3 className="card-title justify-center">User Friendly</h3>
+                  <p className="text-base-content/70">
+                    Designed for both beginners and experts. 
+                    Simple interface with powerful functionality.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
-};
-
-export default Home;
+}
