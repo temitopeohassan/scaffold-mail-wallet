@@ -2,7 +2,7 @@
 
 @layer base {
   html {
-    @apply scroll-smooth;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -32,11 +32,18 @@ p {
 
 @layer components {
   .gradient-bg {
-    @apply bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/20;
+    background: linear-gradient(
+      to bottom right,
+      color-mix(in oklch, var(--color-primary) 20%, transparent),
+      color-mix(in oklch, var(--color-secondary) 10%, transparent),
+      color-mix(in oklch, var(--color-accent) 20%, transparent)
+    );
   }
 
   .glass-effect {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
+    background: rgb(255 255 255 / 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgb(255 255 255 / 0.2);
   }
 
   .wallet-address {
@@ -57,19 +64,31 @@ p {
   }
 
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+    transition: all 300ms;
+  }
+
+  .card-hover:hover {
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    transform: translateY(-0.25rem);
   }
 
   .btn-ethereum {
-    @apply bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white border-0 shadow-lg;
+    background: linear-gradient(to right, var(--color-primary), color-mix(in oklch, var(--color-primary) 80%, transparent));
+    color: white;
+    border: 0;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  .btn-ethereum:hover {
+    background: linear-gradient(to right, color-mix(in oklch, var(--color-primary) 90%, black), var(--color-primary));
   }
 
   .btn {
-    @apply shadow-md;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   }
 
   .btn.btn-ghost {
-    @apply shadow-none;
+    box-shadow: none;
   }
 }
 
