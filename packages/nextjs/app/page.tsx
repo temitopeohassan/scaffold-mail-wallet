@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Wallet, Shield, Zap, Users, ArrowRight } from 'lucide-react';
+import React, { useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { ArrowRight, Shield, Users, Wallet, Zap } from "lucide-react";
 
 export default function HomePage() {
   const { user, loading } = useAuth();
@@ -12,7 +12,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!loading && user) {
-      router.push('/dashboard');
+      router.push("/dashboard");
     }
   }, [user, loading, router]);
 
@@ -38,8 +38,8 @@ export default function HomePage() {
                 Your Gateway to the <span className="text-primary">Ethereum</span> Ecosystem
               </h1>
               <p className="text-xl text-base-content/70 max-w-2xl mx-auto text-balance">
-                Generate secure Ethereum wallets instantly. Simple, secure, and user-friendly 
-                wallet creation with enterprise-grade security.
+                Generate secure Ethereum wallets instantly. Simple, secure, and user-friendly wallet creation with
+                enterprise-grade security.
               </p>
             </div>
 
@@ -62,8 +62,8 @@ export default function HomePage() {
                   </div>
                   <h3 className="card-title justify-center">Bank-Grade Security</h3>
                   <p className="text-base-content/70">
-                    Your private keys are never stored on our servers. 
-                    Generate wallets securely with industry-standard encryption.
+                    Your private keys are never stored on our servers. Generate wallets securely with industry-standard
+                    encryption.
                   </p>
                 </div>
               </div>
@@ -75,8 +75,7 @@ export default function HomePage() {
                   </div>
                   <h3 className="card-title justify-center">Instant Generation</h3>
                   <p className="text-base-content/70">
-                    Create your Ethereum wallet in seconds. 
-                    No waiting, no complicated setup process.
+                    Create your Ethereum wallet in seconds. No waiting, no complicated setup process.
                   </p>
                 </div>
               </div>
@@ -88,8 +87,7 @@ export default function HomePage() {
                   </div>
                   <h3 className="card-title justify-center">User Friendly</h3>
                   <p className="text-base-content/70">
-                    Designed for both beginners and experts. 
-                    Simple interface with powerful functionality.
+                    Designed for both beginners and experts. Simple interface with powerful functionality.
                   </p>
                 </div>
               </div>

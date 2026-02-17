@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { toast } from 'react-hot-toast';
-import { Eye, EyeOff, Wallet, ArrowLeft, Mail } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { auth } from "@/lib/firebase";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { ArrowLeft, Eye, EyeOff, Mail, Wallet } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function SignupPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
@@ -21,29 +21,29 @@ export default function SignupPage() {
 
   useEffect(() => {
     if (user && user.emailVerified) {
-      router.push('/wallet/create');
+      router.push("/wallet/create");
     }
   }, [user, router]);
 
   const validateForm = () => {
     if (!email || !password || !confirmPassword) {
-      toast.error('Please fill in all fields');
+      toast.error("Please fill in all fields");
       return false;
     }
 
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error("Passwords do not match");
       return false;
     }
 
     if (password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+      toast.error("Password must be at least 6 characters");
       return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      toast.error('Please enter a valid email address');
+      toast.error("Please enter a valid email address");
       return false;
     }
 
@@ -52,11 +52,11 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     if (!auth) {
-      toast.error('Authentication is not configured. Please set Firebase env vars.');
+      toast.error("Authentication is not configured. Please set Firebase env vars.");
       return;
     }
 
@@ -65,19 +65,19 @@ export default function SignupPage() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await sendEmailVerification(userCredential.user);
       setEmailSent(true);
-      toast.success('Account created! Please check your email for verification.');
+      toast.success("Account created! Please check your email for verification.");
     } catch (error: any) {
-      console.error('Signup error:', error);
-      let errorMessage = 'Failed to create account';
-      
-      if (error.code === 'auth/email-already-in-use') {
-        errorMessage = 'An account with this email already exists';
-      } else if (error.code === 'auth/invalid-email') {
-        errorMessage = 'Invalid email address';
-      } else if (error.code === 'auth/weak-password') {
-        errorMessage = 'Password is too weak';
+      console.error("Signup error:", error);
+      let errorMessage = "Failed to create account";
+
+      if (error.code === "auth/email-already-in-use") {
+        errorMessage = "An account with this email already exists";
+      } else if (error.code === "auth/invalid-email") {
+        errorMessage = "Invalid email address";
+      } else if (error.code === "auth/weak-password") {
+        errorMessage = "Password is too weak";
       }
-      
+
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -95,18 +95,15 @@ export default function SignupPage() {
               </div>
               <h1 className="text-2xl font-bold mb-4">Check Your Email</h1>
               <p className="text-base-content/70 mb-6">
-                We've sent a verification link to <strong>{email}</strong>. 
-                Please click the link in the email to verify your account.
+                We&apos;ve sent a verification link to <strong>{email}</strong>. Please click the link in the email to
+                verify your account.
               </p>
-              
+
               <div className="space-y-4">
                 <Link href="/auth/login" className="btn btn-primary w-full">
                   Continue to Sign In
                 </Link>
-                <button
-                  onClick={() => setEmailSent(false)}
-                  className="btn btn-ghost w-full"
-                >
+                <button onClick={() => setEmailSent(false)} className="btn btn-ghost w-full">
                   Change Email Address
                 </button>
               </div>
@@ -151,7 +148,7 @@ export default function SignupPage() {
                   placeholder="Enter your email"
                   className="input input-bordered w-full"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                   disabled={loading}
                 />
               </div>
@@ -162,11 +159,11 @@ export default function SignupPage() {
                 </label>
                 <div className="relative">
                   <input
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     placeholder="Create a password"
                     className="input input-bordered w-full pr-12"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={e => setPassword(e.target.value)}
                     disabled={loading}
                   />
                   <button
@@ -195,27 +192,23 @@ export default function SignupPage() {
                   placeholder="Confirm your password"
                   className="input input-bordered w-full"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={e => setConfirmPassword(e.target.value)}
                   disabled={loading}
                 />
               </div>
 
-              <button
-                type="submit"
-                className={`btn btn-primary w-full ${loading ? 'loading' : ''}`}
-                disabled={loading}
-              >
-                {loading ? 'Creating Account...' : 'Create Account'}
+              <button type="submit" className={`btn btn-primary w-full ${loading ? "loading" : ""}`} disabled={loading}>
+                {loading ? "Creating Account..." : "Create Account"}
               </button>
             </form>
 
             {/* Terms */}
             <p className="text-xs text-base-content/60 text-center mt-4">
-              By creating an account, you agree to our{' '}
+              By creating an account, you agree to our{" "}
               <Link href="/terms" className="link link-primary">
                 Terms of Service
-              </Link>{' '}
-              and{' '}
+              </Link>{" "}
+              and{" "}
               <Link href="/privacy" className="link link-primary">
                 Privacy Policy
               </Link>
@@ -223,7 +216,7 @@ export default function SignupPage() {
 
             {/* Login Link */}
             <div className="divider">Already have an account?</div>
-            
+
             <div className="text-center">
               <Link href="/auth/login" className="link link-primary font-medium">
                 Sign in here

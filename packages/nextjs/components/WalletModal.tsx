@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { Copy, Eye, EyeOff, Shield, AlertTriangle, CheckCircle2 } from 'lucide-react';
-import { toast } from 'react-hot-toast';
-import { WalletData } from '@/lib/api';
+import React, { useEffect, useState } from "react";
+import { WalletData } from "@/lib/api";
+import { AlertTriangle, CheckCircle2, Copy, Eye, EyeOff, Shield } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 interface WalletModalProps {
   isOpen: boolean;
@@ -15,7 +15,7 @@ interface WalletModalProps {
 const WalletModal: React.FC<WalletModalProps> = ({ isOpen, walletData, onClose, onComplete }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showPrivateKey, setShowPrivateKey] = useState(false);
-  const [copied, setCopied] = useState<'address' | 'key' | null>(null);
+  const [copied, setCopied] = useState<"address" | "key" | null>(null);
   const [acknowledged, setAcknowledged] = useState(false);
 
   useEffect(() => {
@@ -27,14 +27,14 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, walletData, onClose, 
     }
   }, [isOpen]);
 
-  const copyToClipboard = async (text: string, type: 'address' | 'key') => {
+  const copyToClipboard = async (text: string, type: "address" | "key") => {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(type);
-      toast.success(`${type === 'address' ? 'Address' : 'Private key'} copied to clipboard`);
+      toast.success(`${type === "address" ? "Address" : "Private key"} copied to clipboard`);
       setTimeout(() => setCopied(null), 2000);
-    } catch (err) {
-      toast.error('Failed to copy to clipboard');
+    } catch {
+      toast.error("Failed to copy to clipboard");
     }
   };
 
@@ -49,7 +49,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, walletData, onClose, 
       onComplete();
       onClose();
     } else {
-      toast.error('Please acknowledge that you have saved your private key');
+      toast.error("Please acknowledge that you have saved your private key");
     }
   };
 
@@ -60,9 +60,9 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, walletData, onClose, 
       <div className="modal-box w-11/12 max-w-2xl">
         {/* Progress Steps */}
         <div className="steps steps-horizontal w-full mb-8">
-          <div className={`step ${currentStep >= 1 ? 'step-primary' : ''}`}>Your Wallet</div>
-          <div className={`step ${currentStep >= 2 ? 'step-primary' : ''}`}>Private Key</div>
-          <div className={`step ${currentStep >= 3 ? 'step-primary' : ''}`}>Security</div>
+          <div className={`step ${currentStep >= 1 ? "step-primary" : ""}`}>Your Wallet</div>
+          <div className={`step ${currentStep >= 2 ? "step-primary" : ""}`}>Private Key</div>
+          <div className={`step ${currentStep >= 3 ? "step-primary" : ""}`}>Security</div>
         </div>
 
         {/* Step 1: Wallet Address */}
@@ -86,8 +86,8 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, walletData, onClose, 
                   readOnly
                 />
                 <button
-                  className={`btn btn-outline ${copied === 'address' ? 'btn-success' : ''}`}
-                  onClick={() => copyToClipboard(walletData.walletAddress, 'address')}
+                  className={`btn btn-outline ${copied === "address" ? "btn-success" : ""}`}
+                  onClick={() => copyToClipboard(walletData.walletAddress, "address")}
                 >
                   <Copy className="w-4 h-4" />
                 </button>
@@ -119,8 +119,8 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, walletData, onClose, 
               <div>
                 <h4 className="font-semibold">Important Security Notice</h4>
                 <p className="text-sm">
-                  This private key will only be shown ONCE. Make sure to save it securely.
-                  Anyone with access to this key can control your wallet.
+                  This private key will only be shown ONCE. Make sure to save it securely. Anyone with access to this
+                  key can control your wallet.
                 </p>
               </div>
             </div>
@@ -128,23 +128,20 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, walletData, onClose, 
             <div className="bg-base-200 rounded-lg p-6 mb-6">
               <label className="label">
                 <span className="label-text font-semibold">Private Key</span>
-                <button
-                  className="btn btn-ghost btn-sm"
-                  onClick={() => setShowPrivateKey(!showPrivateKey)}
-                >
+                <button className="btn btn-ghost btn-sm" onClick={() => setShowPrivateKey(!showPrivateKey)}>
                   {showPrivateKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </label>
               <div className="flex items-center gap-2">
                 <input
-                  type={showPrivateKey ? 'text' : 'password'}
+                  type={showPrivateKey ? "text" : "password"}
                   className="input input-bordered flex-1 font-mono text-sm"
                   value={walletData.privateKey}
                   readOnly
                 />
                 <button
-                  className={`btn btn-outline ${copied === 'key' ? 'btn-success' : ''}`}
-                  onClick={() => copyToClipboard(walletData.privateKey, 'key')}
+                  className={`btn btn-outline ${copied === "key" ? "btn-success" : ""}`}
+                  onClick={() => copyToClipboard(walletData.privateKey, "key")}
                 >
                   <Copy className="w-4 h-4" />
                 </button>
@@ -191,10 +188,10 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, walletData, onClose, 
                 <div>
                   <h4 className="font-semibold">❌ What you should NOT do:</h4>
                   <ul className="text-sm mt-2 space-y-1">
-                    <li>• Don't store your private key in emails, cloud drives, or text messages</li>
-                    <li>• Don't share your private key on social media or messaging apps</li>
-                    <li>• Don't enter your private key on suspicious websites</li>
-                    <li>• Don't screenshot your private key on devices that sync to cloud</li>
+                    <li>• Don&apos;t store your private key in emails, cloud drives, or text messages</li>
+                    <li>• Don&apos;t share your private key on social media or messaging apps</li>
+                    <li>• Don&apos;t enter your private key on suspicious websites</li>
+                    <li>• Don&apos;t screenshot your private key on devices that sync to cloud</li>
                   </ul>
                 </div>
               </div>
@@ -206,11 +203,11 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, walletData, onClose, 
                   type="checkbox"
                   className="checkbox checkbox-primary"
                   checked={acknowledged}
-                  onChange={(e) => setAcknowledged(e.target.checked)}
+                  onChange={e => setAcknowledged(e.target.checked)}
                 />
                 <span className="label-text ml-3">
-                  I understand that I am solely responsible for the security of my private key, 
-                  and I have saved it in a secure location.
+                  I understand that I am solely responsible for the security of my private key, and I have saved it in a
+                  secure location.
                 </span>
               </label>
             </div>
@@ -219,8 +216,8 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, walletData, onClose, 
               <button className="btn btn-ghost" onClick={() => setCurrentStep(2)}>
                 Back
               </button>
-              <button 
-                className={`btn btn-success ${!acknowledged ? 'btn-disabled' : ''}`}
+              <button
+                className={`btn btn-success ${!acknowledged ? "btn-disabled" : ""}`}
                 onClick={handleComplete}
                 disabled={!acknowledged}
               >

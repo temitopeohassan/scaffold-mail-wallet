@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useWallet } from '@/contexts/WalletContext';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast';
-import { Wallet, Shield, Zap, CheckCircle2 } from 'lucide-react';
-import WalletModal from '@/components/WalletModal';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import WalletModal from "@/components/WalletModal";
+import { useAuth } from "@/contexts/AuthContext";
+import { useWallet } from "@/contexts/WalletContext";
+import { CheckCircle2, Shield, Wallet, Zap } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function CreateWalletPage() {
   const { user, loading: authLoading } = useAuth();
@@ -16,20 +16,20 @@ export default function CreateWalletPage() {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      router.push('/auth/login');
+      router.push("/auth/login");
     }
   }, [user, authLoading, router]);
 
   useEffect(() => {
     if (!authLoading && user && !user.emailVerified) {
-      toast.error('Please verify your email address first');
-      router.push('/auth/login');
+      toast.error("Please verify your email address first");
+      router.push("/auth/login");
     }
   }, [user, authLoading, router]);
 
   const handleCreateWallet = async () => {
     if (!user) {
-      toast.error('Please sign in first');
+      toast.error("Please sign in first");
       return;
     }
 
@@ -45,7 +45,7 @@ export default function CreateWalletPage() {
     const activated = await activateUser(walletData.walletAddress);
     if (activated) {
       clearWallet(); // Clear wallet data from memory for security
-      router.push('/dashboard');
+      router.push("/dashboard");
     }
   };
 
@@ -72,7 +72,7 @@ export default function CreateWalletPage() {
             </div>
             <h1 className="text-4xl font-bold mb-4">Create Your Ethereum Wallet</h1>
             <p className="text-xl text-base-content/70 max-w-2xl mx-auto">
-              Welcome {user.email}! Let's create your secure Ethereum wallet in just a few clicks.
+              Welcome {user.email}! Let&apos;s create your secure Ethereum wallet in just a few clicks.
             </p>
           </div>
 
@@ -119,15 +119,15 @@ export default function CreateWalletPage() {
           <div className="card bg-base-100 shadow-2xl max-w-2xl mx-auto">
             <div className="card-body text-center">
               <h2 className="card-title justify-center text-2xl mb-6">Ready to Create Your Wallet?</h2>
-              
+
               <div className="space-y-4 mb-8">
                 <div className="alert alert-info">
                   <div className="text-left">
                     <h4 className="font-semibold mb-2">What happens next:</h4>
                     <ol className="text-sm space-y-1">
-                      <li>1. We'll generate a unique Ethereum wallet for you</li>
-                      <li>2. You'll see your wallet address and private key</li>
-                      <li>3. You'll need to securely save your private key</li>
+                      <li>1. We&apos;ll generate a unique Ethereum wallet for you</li>
+                      <li>2. You&apos;ll see your wallet address and private key</li>
+                      <li>3. You&apos;ll need to securely save your private key</li>
                       <li>4. Your account will be activated for use</li>
                     </ol>
                   </div>
@@ -137,8 +137,8 @@ export default function CreateWalletPage() {
                   <div className="text-left">
                     <h4 className="font-semibold mb-2">Important Security Note:</h4>
                     <p className="text-sm">
-                      Your private key will be shown only ONCE. Make sure to save it in a secure location. 
-                      We never store your private keys on our servers.
+                      Your private key will be shown only ONCE. Make sure to save it in a secure location. We never
+                      store your private keys on our servers.
                     </p>
                   </div>
                 </div>
@@ -147,9 +147,9 @@ export default function CreateWalletPage() {
               <button
                 onClick={handleCreateWallet}
                 disabled={walletLoading}
-                className={`btn btn-ethereum btn-lg w-full max-w-sm ${walletLoading ? 'loading' : ''}`}
+                className={`btn btn-ethereum btn-lg w-full max-w-sm ${walletLoading ? "loading" : ""}`}
               >
-                {walletLoading ? 'Generating Wallet...' : 'Generate My Wallet'}
+                {walletLoading ? "Generating Wallet..." : "Generate My Wallet"}
               </button>
 
               <p className="text-sm text-base-content/60 mt-4">

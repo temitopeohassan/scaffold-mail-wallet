@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { toast } from 'react-hot-toast';
-import { Eye, EyeOff, Wallet, ArrowLeft } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { auth } from "@/lib/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { ArrowLeft, Eye, EyeOff, Wallet } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
@@ -19,44 +19,44 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (user) {
-      router.push('/dashboard');
+      router.push("/dashboard");
     }
   }, [user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
-      toast.error('Please fill in all fields');
+      toast.error("Please fill in all fields");
       return;
     }
 
     if (!auth) {
-      toast.error('Authentication is not configured. Please set Firebase env vars.');
+      toast.error("Authentication is not configured. Please set Firebase env vars.");
       return;
     }
 
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      toast.success('Signed in successfully!');
-      router.push('/dashboard');
+      toast.success("Signed in successfully!");
+      router.push("/dashboard");
     } catch (error: any) {
-      console.error('Login error:', error);
-      let errorMessage = 'Failed to sign in';
-      
-      if (error.code === 'auth/user-not-found') {
-        errorMessage = 'No account found with this email';
-      } else if (error.code === 'auth/wrong-password') {
-        errorMessage = 'Incorrect password';
-      } else if (error.code === 'auth/invalid-email') {
-        errorMessage = 'Invalid email address';
-      } else if (error.code === 'auth/user-disabled') {
-        errorMessage = 'Account has been disabled';
-      } else if (error.code === 'auth/too-many-requests') {
-        errorMessage = 'Too many failed attempts. Please try again later';
+      console.error("Login error:", error);
+      let errorMessage = "Failed to sign in";
+
+      if (error.code === "auth/user-not-found") {
+        errorMessage = "No account found with this email";
+      } else if (error.code === "auth/wrong-password") {
+        errorMessage = "Incorrect password";
+      } else if (error.code === "auth/invalid-email") {
+        errorMessage = "Invalid email address";
+      } else if (error.code === "auth/user-disabled") {
+        errorMessage = "Account has been disabled";
+      } else if (error.code === "auth/too-many-requests") {
+        errorMessage = "Too many failed attempts. Please try again later";
       }
-      
+
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -97,7 +97,7 @@ export default function LoginPage() {
                   placeholder="Enter your email"
                   className="input input-bordered w-full"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                   disabled={loading}
                 />
               </div>
@@ -108,11 +108,11 @@ export default function LoginPage() {
                 </label>
                 <div className="relative">
                   <input
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     className="input input-bordered w-full pr-12"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={e => setPassword(e.target.value)}
                     disabled={loading}
                   />
                   <button
@@ -129,21 +129,17 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <button
-                type="submit"
-                className={`btn btn-primary w-full ${loading ? 'loading' : ''}`}
-                disabled={loading}
-              >
-                {loading ? 'Signing in...' : 'Sign In'}
+              <button type="submit" className={`btn btn-primary w-full ${loading ? "loading" : ""}`} disabled={loading}>
+                {loading ? "Signing in..." : "Sign In"}
               </button>
             </form>
 
             {/* Links */}
             <div className="divider">OR</div>
-            
+
             <div className="text-center space-y-2">
               <p className="text-sm">
-                Don't have an account?{' '}
+                Don&apos;t have an account?{" "}
                 <Link href="/auth/signup" className="link link-primary font-medium">
                   Sign up here
                 </Link>

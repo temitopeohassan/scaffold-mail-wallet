@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Wallet } from 'lucide-react';
+import React from "react";
+import { Wallet } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -13,12 +13,8 @@ export default function Footer() {
           </div>
           <span className="font-bold text-lg">EthWallet</span>
         </div>
-        <p className="text-base-content/70">
-          Secure Ethereum wallet generation for everyone
-        </p>
-        <p className="text-sm text-base-content/50">
-          © 2025 SE2. All rights reserved.
-        </p>
+        <p className="text-base-content/70">Secure Ethereum wallet generation for everyone</p>
+        <p className="text-sm text-base-content/50">© 2025 SE2. All rights reserved.</p>
       </aside>
     </footer>
   );

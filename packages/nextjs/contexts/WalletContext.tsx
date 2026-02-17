@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { api, WalletData } from '@/lib/api';
-import { toast } from 'react-hot-toast';
+import React, { createContext, useCallback, useContext, useState } from "react";
+import { WalletData, api } from "@/lib/api";
+import { toast } from "react-hot-toast";
 
 interface WalletContextType {
   walletData: WalletData | null;
@@ -23,7 +23,7 @@ const WalletContext = createContext<WalletContextType>({
 export const useWallet = () => {
   const context = useContext(WalletContext);
   if (!context) {
-    throw new Error('useWallet must be used within a WalletProvider');
+    throw new Error("useWallet must be used within a WalletProvider");
   }
   return context;
 };
@@ -38,15 +38,16 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const response = await api.generateWallet(userId);
       if (response.success && response.data) {
         setWalletData(response.data);
-        toast.success('Wallet generated successfully!');
+        toast.success("Wallet generated successfully!");
         return response.data;
       } else {
-        toast.error(response.error || 'Failed to generate wallet');
+        toast.error(response.error || "Failed to generate wallet");
         return null;
       }
     } catch (error) {
-      console.error('Wallet generation error:', error);
-      toast.error('Failed to generate wallet');
+      console.error("Wallet generation error:", error);
+      const message = error instanceof Error ? error.message : "Failed to generate wallet";
+      toast.error(message);
       return null;
     } finally {
       setLoading(false);
@@ -61,15 +62,15 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     try {
       const response = await api.activateUser(walletAddress);
       if (response.success) {
-        toast.success('Account activated successfully!');
+        toast.success("Account activated successfully!");
         return true;
       } else {
-        toast.error(response.error || 'Failed to activate account');
+        toast.error(response.error || "Failed to activate account");
         return false;
       }
     } catch (error) {
-      console.error('Account activation error:', error);
-      toast.error('Failed to activate account');
+      console.error("Account activation error:", error);
+      toast.error("Failed to activate account");
       return false;
     }
   }, []);

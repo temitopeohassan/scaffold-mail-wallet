@@ -1,22 +1,11 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { 
-  Wallet, 
-  Copy, 
-  ExternalLink, 
-  User, 
-  Settings, 
-  LogOut,
-  RefreshCw,
-  TrendingUp,
-  Shield,
-  Clock
-} from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { Clock, Copy, ExternalLink, LogOut, RefreshCw, Settings, Shield, TrendingUp, User, Wallet } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function DashboardPage() {
   const { user, loading, signOut } = useAuth();
@@ -26,7 +15,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/auth/login');
+      router.push("/auth/login");
     }
   }, [user, loading, router]);
 
@@ -34,19 +23,19 @@ export default function DashboardPage() {
   useEffect(() => {
     if (user) {
       // This would typically be fetched from your backend
-      setWalletAddress('0x742d35Cc6C6C6C8B8C8B8C8B8C8B8C8B8C8B8C8B');
+      setWalletAddress("0x742d35Cc6C6C6C8B8C8B8C8B8C8B8C8B8C8B8C8B");
     }
   }, [user]);
 
   const copyAddress = async () => {
     if (!walletAddress) return;
-    
+
     setCopying(true);
     try {
       await navigator.clipboard.writeText(walletAddress);
-      toast.success('Wallet address copied to clipboard!');
-    } catch (err) {
-      toast.error('Failed to copy address');
+      toast.success("Wallet address copied to clipboard!");
+    } catch {
+      toast.error("Failed to copy address");
     } finally {
       setCopying(false);
     }
@@ -54,7 +43,7 @@ export default function DashboardPage() {
 
   const handleSignOut = async () => {
     await signOut();
-    router.push('/');
+    router.push("/");
   };
 
   if (loading) {
@@ -81,7 +70,7 @@ export default function DashboardPage() {
             <span className="text-xl font-bold">EthWallet</span>
           </div>
         </div>
-        
+
         <div className="navbar-end">
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
@@ -89,12 +78,23 @@ export default function DashboardPage() {
                 <User className="w-5 h-5 text-white" />
               </div>
             </div>
-            <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            >
               <li className="menu-title">
                 <span className="text-xs truncate">{user.email}</span>
               </li>
-              <li><a><Settings className="w-4 h-4" /> Settings</a></li>
-              <li><a onClick={handleSignOut}><LogOut className="w-4 h-4" /> Sign Out</a></li>
+              <li>
+                <a>
+                  <Settings className="w-4 h-4" /> Settings
+                </a>
+              </li>
+              <li>
+                <a onClick={handleSignOut}>
+                  <LogOut className="w-4 h-4" /> Sign Out
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function DashboardPage() {
                   <Wallet className="w-5 h-5" />
                   Your Wallet
                 </h2>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label className="label">
@@ -165,11 +165,11 @@ export default function DashboardPage() {
                       <input
                         type="text"
                         className="input input-bordered flex-1 font-mono text-sm"
-                        value={walletAddress || ''}
+                        value={walletAddress || ""}
                         readOnly
                       />
                       <button
-                        className={`btn btn-square btn-outline ${copying ? 'loading' : ''}`}
+                        className={`btn btn-square btn-outline ${copying ? "loading" : ""}`}
                         onClick={copyAddress}
                         disabled={copying || !walletAddress}
                       >
@@ -184,9 +184,7 @@ export default function DashboardPage() {
                         <ExternalLink className="w-4 h-4" />
                       </a>
                     </div>
-                    <p className="text-sm text-base-content/60 mt-2">
-                      Share this address to receive ETH and tokens
-                    </p>
+                    <p className="text-sm text-base-content/60 mt-2">Share this address to receive ETH and tokens</p>
                   </div>
 
                   <div className="divider"></div>
@@ -204,23 +202,23 @@ export default function DashboardPage() {
             <div className="card bg-base-100 shadow-lg">
               <div className="card-body">
                 <h2 className="card-title">Quick Actions</h2>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <button className="btn btn-primary btn-outline">
                     <RefreshCw className="w-4 h-4" />
                     Refresh Balance
                   </button>
-                  
+
                   <button className="btn btn-secondary btn-outline">
                     <ExternalLink className="w-4 h-4" />
                     View on Explorer
                   </button>
-                  
+
                   <button className="btn btn-accent btn-outline">
                     <Settings className="w-4 h-4" />
                     Settings
                   </button>
-                  
+
                   <button className="btn btn-info btn-outline">
                     <Shield className="w-4 h-4" />
                     Security
@@ -262,9 +260,7 @@ export default function DashboardPage() {
                   <p className="text-base-content/60 mb-4">
                     Your transaction history will appear here once you start using your wallet.
                   </p>
-                  <button className="btn btn-primary btn-sm">
-                    Add funds to get started
-                  </button>
+                  <button className="btn btn-primary btn-sm">Add funds to get started</button>
                 </div>
               </div>
             </div>
@@ -277,8 +273,7 @@ export default function DashboardPage() {
                 <div className="flex-1">
                   <h3 className="text-xl font-bold mb-2">Need Help?</h3>
                   <p className="text-base-content/70">
-                    Learn how to use your wallet safely, import it into other apps, 
-                    and explore the Ethereum ecosystem.
+                    Learn how to use your wallet safely, import it into other apps, and explore the Ethereum ecosystem.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
