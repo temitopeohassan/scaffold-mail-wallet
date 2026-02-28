@@ -223,3 +223,25 @@ Use **Context7 MCP** tools to fetch up-to-date documentation for any library (Wa
 Use these specialized agents for specific tasks:
 
 - **`grumpy-carlos-code-reviewer`**: Use this agent for code reviews before finalizing changes
+
+## Cursor Cloud specific instructions
+
+This repo is the **Hardhat flavor** of SE-2, customized as "EthWallet" with Firebase auth and an external backend API.
+
+### Services overview
+
+| Service | Command | Port | Notes |
+|---|---|---|---|
+| Hardhat local chain | `yarn chain` | 8545 | Must be running before deploy |
+| Contract deployment | `yarn deploy` | — | One-shot; regenerates `deployedContracts.ts` |
+| Next.js frontend | `yarn start` | 3000 | First compile is slow (~30 s) |
+
+Start services in order: chain → deploy → start. See "Common Commands" above for the full list.
+
+### Caveats
+
+- The Next.js first page load after `yarn start` takes ~20-30 seconds to compile. Wait for a 200 response from `curl http://localhost:3000` before proceeding.
+- The frontend includes Firebase auth (`firebase` package) and calls an external backend at `NEXT_PUBLIC_API_URL` (default `http://localhost:5000`). These are **not required** for the core SE-2 contract interaction flow (Debug Contracts page, block explorer). Auth-gated pages (Sign In, Dashboard) will fail gracefully without Firebase config.
+- `yarn deploy` auto-generates `packages/nextjs/contracts/deployedContracts.ts`. Do not manually edit this file.
+- The `pre-commit` hook runs `yarn lint-staged`, which lints staged files. Ensure `yarn lint` passes before committing.
+- Hardhat tests (`yarn test`) run against an in-memory Hardhat network and do **not** require `yarn chain` to be running.
