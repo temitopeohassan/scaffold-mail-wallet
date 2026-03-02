@@ -12,7 +12,7 @@ export default function Header() {
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <Wallet className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl font-bold">EthWallet</span>
+          <span className="text-xl font-bold">ScaffoldEth Wallet</span>
         </div>
       </div>
       <div className="navbar-end">

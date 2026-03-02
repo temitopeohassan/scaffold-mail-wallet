@@ -11,10 +11,10 @@ export default function Footer() {
           <div className="w-6 h-6 bg-primary rounded flex items-center justify-center">
             <Wallet className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-lg">EthWallet</span>
+          <span className="font-bold text-lg">ScaffoldEth Wallet</span>
         </div>
         <p className="text-base-content/70">Secure Ethereum wallet generation for everyone</p>
-        <p className="text-sm text-base-content/50">© 2025 SE2. All rights reserved.</p>
+        <p className="text-sm text-base-content/50">© {new Date().getFullYear()} SE2. All rights reserved.</p>
       </aside>
     </footer>
   );

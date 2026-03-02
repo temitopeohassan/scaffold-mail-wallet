@@ -11,8 +11,8 @@ import { ThemeProvider } from "~~/components/ThemeProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Ethereum Wallet App",
-  description: "Secure Ethereum wallet generation and management",
+  title: "ScaffoldEth   Wallet",
+  description: "ScaffoldEth Wallet - wallet generation and management for your dApps",
 };
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
