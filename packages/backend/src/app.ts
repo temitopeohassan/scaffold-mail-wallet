@@ -30,6 +30,15 @@ export async function createApp(): Promise<Express> {
   setupMiddleware(app);
   setupRoutes(app);
 
+  app.get('/', (_req, res) => {
+    res.status(200).json({
+      name: 'Scaffold Mail Wallet API',
+      status: 'running',
+      health: '/health',
+      docs: '/api/v1',
+    });
+  });
+
   app.get('/health', (_req, res) => {
     res.status(200).json({
       status: 'OK',
