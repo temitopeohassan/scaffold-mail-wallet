@@ -32,7 +32,9 @@ export default function LoginPage() {
     }
 
     if (!auth) {
-      toast.error("Authentication is not configured. Please set Firebase env vars.");
+      toast.error(
+        "Authentication is not configured. Add NEXT_PUBLIC_FIREBASE_* vars in .env.local (see .env.example) or in Vercel."
+      );
       return;
     }
 

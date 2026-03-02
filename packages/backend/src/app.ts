@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import serverless from 'serverless-http';
 import { initializeFirebase } from './config/firebase';
 import { setupMiddleware } from './middleware';
 import { setupRoutes } from './routes';
@@ -40,4 +41,20 @@ export async function createApp(): Promise<Express> {
   app.use(errorHandler);
 
   return app;
+}
+
+let cachedHandler: ReturnType<typeof serverless> | null = null;
+
+/**
+ * Default export for Vercel serverless: must be a function so the runtime accepts this module as the handler.
+ */
+export default async function handler(
+  req: import('express').Request,
+  res: import('express').Response
+): Promise<void | import('express').Response> {
+  if (!cachedHandler) {
+    const app = await createApp();
+    cachedHandler = serverless(app);
+  }
+  return cachedHandler(req, res);
 }
