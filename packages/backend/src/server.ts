@@ -5,7 +5,7 @@ import { logger } from './utils/logger';
 // Load environment variables
 dotenv.config();
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env['PORT'] || 5000;
 
 async function startServer() {
   try {
@@ -13,8 +13,8 @@ async function startServer() {
 
     app.listen(PORT, () => {
       logger.info(`Server is running on port ${PORT}`);
-      logger.info(`Environment: ${process.env.NODE_ENV}`);
-      logger.info(`CORS Origin: ${process.env.CORS_ORIGIN}`);
+      logger.info(`Environment: ${process.env['NODE_ENV']}`);
+      logger.info(`CORS Origin: ${process.env['CORS_ORIGIN']}`);
     });
   } catch (error) {
     logger.error('Failed to start server:', error);

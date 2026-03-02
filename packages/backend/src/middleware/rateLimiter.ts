@@ -4,8 +4,8 @@ import { logger } from '../utils/logger';
 
 const rateLimiter = new RateLimiterMemory({
   keyPrefix: 'middleware',
-  points: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'), // Number of requests
-  duration: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900'), // Per 15 minutes (900 seconds)
+  points: parseInt(process.env['RATE_LIMIT_MAX_REQUESTS'] || '100', 10),
+  duration: parseInt(process.env['RATE_LIMIT_WINDOW_MS'] || '900', 10),
 });
 
 export const rateLimiterMiddleware = async (
@@ -17,13 +17,16 @@ export const rateLimiterMiddleware = async (
     const clientIp = req.ip || req.connection.remoteAddress || 'unknown';
     await rateLimiter.consume(clientIp);
     next();
-  } catch (rejRes) {
+  } catch (rejRes: unknown) {
+    const msBeforeNext = typeof rejRes === 'object' && rejRes !== null && 'msBeforeNext' in rejRes
+      ? (rejRes as { msBeforeNext: number }).msBeforeNext
+      : 1000;
     logger.warn(`Rate limit exceeded for IP: ${req.ip}`);
     res.status(429).json({
       success: false,
       error: 'Too Many Requests',
       message: 'Rate limit exceeded. Please try again later.',
-      retryAfter: Math.round(rejRes.msBeforeNext / 1000) || 1,
+      retryAfter: Math.round(msBeforeNext / 1000) || 1,
     });
   }
 };

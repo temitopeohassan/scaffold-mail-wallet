@@ -67,8 +67,8 @@ export class AuthService {
       // Verify the refresh token and generate a new ID token
       // This is typically handled by Firebase client SDK, but for completeness:
       
-      const decodedToken = await getAuth().verifyIdToken(refreshToken);
-      
+      await getAuth().verifyIdToken(refreshToken);
+
       // In a real implementation, you would use Firebase Admin SDK
       // to generate a custom token or work with the client SDK
       return {

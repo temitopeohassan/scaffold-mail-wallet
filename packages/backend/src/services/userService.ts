@@ -1,3 +1,4 @@
+import type { QueryDocumentSnapshot, DocumentData } from 'firebase-admin/firestore';
 import { getFirestore, getAuth, COLLECTIONS } from '../config/firebase';
 import { logger } from '../utils/logger';
 import { User, ActivateUserResponse } from '../types';
@@ -17,7 +18,7 @@ export class UserService {
         updatedAt: new Date()
       };
 
-      await firestore.collection(COLLECTIONS.USERS).doc(uid).set(userData);
+      await getFirestore().collection(COLLECTIONS.USERS).doc(uid).set(userData);
       
       logger.info('User created successfully', { uid, email });
       return userData;
@@ -29,7 +30,7 @@ export class UserService {
 
   async getUserProfile(uid: string): Promise<User | null> {
     try {
-      const userDoc = await firestore.collection(COLLECTIONS.USERS).doc(uid).get();
+      const userDoc = await getFirestore().collection(COLLECTIONS.USERS).doc(uid).get();
       
       if (!userDoc.exists) {
         // Try to get user from Firebase Auth and create profile
@@ -45,13 +46,13 @@ export class UserService {
 
       const data = userDoc.data();
       return {
-        uid: data?.uid,
-        email: data?.email,
-        emailVerified: data?.emailVerified || false,
-        walletAddress: data?.walletAddress,
-        activated: data?.activated || false,
-        createdAt: data?.createdAt?.toDate(),
-        updatedAt: data?.updatedAt?.toDate()
+        uid: data?.['uid'],
+        email: data?.['email'],
+        emailVerified: data?.['emailVerified'] || false,
+        walletAddress: data?.['walletAddress'],
+        activated: data?.['activated'] || false,
+        createdAt: data?.['createdAt']?.toDate(),
+        updatedAt: data?.['updatedAt']?.toDate()
       };
     } catch (error) {
       logger.error('Failed to get user profile:', error);
@@ -66,7 +67,7 @@ export class UserService {
         updatedAt: new Date()
       };
 
-      await firestore.collection(COLLECTIONS.USERS).doc(uid).update(updateData);
+      await getFirestore().collection(COLLECTIONS.USERS).doc(uid).update(updateData);
       
       // Get updated user data
       const updatedUser = await this.getUserProfile(uid);
@@ -106,7 +107,7 @@ export class UserService {
       }
 
       // Update user activation status
-      await firestore.collection(COLLECTIONS.USERS).doc(walletData.userId).update({
+      await getFirestore().collection(COLLECTIONS.USERS).doc(walletData.userId).update({
         activated: true,
         updatedAt: new Date()
       });
@@ -133,7 +134,7 @@ export class UserService {
 
   async deactivateUser(uid: string): Promise<void> {
     try {
-      await firestore.collection(COLLECTIONS.USERS).doc(uid).update({
+      await getFirestore().collection(COLLECTIONS.USERS).doc(uid).update({
         activated: false,
         updatedAt: new Date()
       });
@@ -148,12 +149,12 @@ export class UserService {
   async deleteUser(uid: string): Promise<void> {
     try {
       // Delete user document
-      await firestore.collection(COLLECTIONS.USERS).doc(uid).delete();
-      
+      await getFirestore().collection(COLLECTIONS.USERS).doc(uid).delete();
+
       // Delete wallet document if exists
-      const walletDoc = await firestore.collection(COLLECTIONS.WALLETS).doc(uid).get();
+      const walletDoc = await getFirestore().collection(COLLECTIONS.WALLETS).doc(uid).get();
       if (walletDoc.exists) {
-        await firestore.collection(COLLECTIONS.WALLETS).doc(uid).delete();
+        await getFirestore().collection(COLLECTIONS.WALLETS).doc(uid).delete();
       }
 
       // Delete user from Firebase Auth
@@ -168,23 +169,23 @@ export class UserService {
 
   async getUsersByStatus(activated: boolean): Promise<User[]> {
     try {
-      const usersQuery = await firestore
+      const usersQuery = await getFirestore()
         .collection(COLLECTIONS.USERS)
         .where('activated', '==', activated)
         .orderBy('createdAt', 'desc')
         .get();
 
       const users: User[] = [];
-      usersQuery.forEach(doc => {
+      usersQuery.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
         const data = doc.data();
         users.push({
-          uid: data.uid,
-          email: data.email,
-          emailVerified: data.emailVerified,
-          walletAddress: data.walletAddress,
-          activated: data.activated,
-          createdAt: data.createdAt?.toDate(),
-          updatedAt: data.updatedAt?.toDate()
+          uid: data['uid'],
+          email: data['email'],
+          emailVerified: data['emailVerified'],
+          walletAddress: data['walletAddress'],
+          activated: data['activated'],
+          createdAt: data['createdAt']?.toDate(),
+          updatedAt: data['updatedAt']?.toDate()
         });
       });
 
@@ -197,7 +198,7 @@ export class UserService {
 
   async updateEmailVerificationStatus(uid: string, verified: boolean): Promise<void> {
     try {
-      await firestore.collection(COLLECTIONS.USERS).doc(uid).update({
+      await getFirestore().collection(COLLECTIONS.USERS).doc(uid).update({
         emailVerified: verified,
         updatedAt: new Date()
       });

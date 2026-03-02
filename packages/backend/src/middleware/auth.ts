@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { getAuth } from '../config/firebase';
 import { logger } from '../utils/logger';
 import { AuthenticatedRequest } from '../types';
@@ -23,11 +23,11 @@ export const authenticateToken = async (
 
     // Verify Firebase ID token
     const decodedToken = await getAuth().verifyIdToken(token);
-    
+
     req.user = {
       uid: decodedToken.uid,
-      email: decodedToken.email,
-      email_verified: decodedToken.email_verified
+      ...(decodedToken.email !== undefined && { email: decodedToken.email }),
+      ...(decodedToken.email_verified !== undefined && { email_verified: decodedToken.email_verified }),
     };
 
     logger.info('User authenticated', {

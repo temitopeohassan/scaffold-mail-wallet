@@ -74,7 +74,7 @@ export class WalletService {
 
   async getWalletInfo(userId: string): Promise<WalletData | null> {
     try {
-      const walletDoc = await firestore
+      const walletDoc = await getFirestore()
         .collection(COLLECTIONS.WALLETS)
         .doc(userId)
         .get();
@@ -85,10 +85,10 @@ export class WalletService {
 
       const data = walletDoc.data();
       return {
-        userId: data?.userId,
-        walletAddress: data?.walletAddress,
-        createdAt: data?.createdAt?.toDate(),
-        updatedAt: data?.updatedAt?.toDate()
+        userId: data?.['userId'],
+        walletAddress: data?.['walletAddress'],
+        createdAt: data?.['createdAt']?.toDate(),
+        updatedAt: data?.['updatedAt']?.toDate()
       };
     } catch (error) {
       logger.error('Failed to get wallet info:', error);
@@ -102,7 +102,7 @@ export class WalletService {
 
   async getWalletByAddress(walletAddress: string): Promise<WalletData | null> {
     try {
-      const walletQuery = await firestore
+      const walletQuery = await getFirestore()
         .collection(COLLECTIONS.WALLETS)
         .where('walletAddress', '==', walletAddress)
         .limit(1)
@@ -113,13 +113,14 @@ export class WalletService {
       }
 
       const doc = walletQuery.docs[0];
+      if (!doc) return null;
       const data = doc.data();
-      
+
       return {
-        userId: data.userId,
-        walletAddress: data.walletAddress,
-        createdAt: data.createdAt?.toDate(),
-        updatedAt: data.updatedAt?.toDate()
+        userId: data['userId'],
+        walletAddress: data['walletAddress'],
+        createdAt: data['createdAt']?.toDate(),
+        updatedAt: data['updatedAt']?.toDate()
       };
     } catch (error) {
       logger.error('Failed to get wallet by address:', error);

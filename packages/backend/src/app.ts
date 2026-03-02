@@ -19,7 +19,7 @@ export async function createApp(): Promise<Express> {
   app.use(helmet());
   app.use(
     cors({
-      origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+      origin: process.env['CORS_ORIGIN'] || 'http://localhost:3000',
       credentials: true,
     }),
   );
@@ -29,11 +29,11 @@ export async function createApp(): Promise<Express> {
   setupMiddleware(app);
   setupRoutes(app);
 
-  app.get('/health', (req, res) => {
+  app.get('/health', (_req, res) => {
     res.status(200).json({
       status: 'OK',
       timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV,
+      environment: process.env['NODE_ENV'],
     });
   });
 
