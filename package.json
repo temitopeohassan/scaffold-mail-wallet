@@ -2,14 +2,16 @@
   "name": "se-2",
   "version": "0.0.1",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/hardhat",
-      "packages/nextjs"
-    ]
-  },
+  "workspaces": [
+    "packages/backend",
+    "packages/hardhat",
+    "packages/nextjs"
+  ],
   "scripts": {
     "account": "yarn hardhat:account",
+    "backend": "yarn workspace backend dev",
+    "backend:build": "yarn workspace backend build",
+    "backend:start": "yarn workspace backend start",
     "account:generate": "yarn workspace @se-2/hardhat account:generate",
     "account:import": "yarn workspace @se-2/hardhat account:import",
     "account:reveal-pk": "yarn workspace @se-2/hardhat account:reveal-pk",
