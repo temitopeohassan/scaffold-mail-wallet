@@ -35,25 +35,25 @@ export interface ApiResponse<T> {
 export const api = {
   // Generate new wallet
   generateWallet: async (userId: string): Promise<ApiResponse<WalletData>> => {
-    const response = await apiClient.post("/api/wallet/generate", { userId });
+    const response = await apiClient.post("/api/v1/wallet/generate", { userId });
     return response.data;
   },
 
   // Store wallet address
   storeWalletAddress: async (userId: string, walletAddress: string): Promise<ApiResponse<void>> => {
-    const response = await apiClient.post("/api/wallet/store", { userId, walletAddress });
+    const response = await apiClient.post("/api/v1/wallet/store-address", { userId, walletAddress });
     return response.data;
   },
 
   // Activate user
   activateUser: async (walletAddress: string): Promise<ApiResponse<void>> => {
-    const response = await apiClient.post("/api/user/activate", { walletAddress });
+    const response = await apiClient.post("/api/v1/user/activate", { walletAddress });
     return response.data;
   },
 
   // Verify email
   verifyEmail: async (email: string, verificationCode: string): Promise<ApiResponse<void>> => {
-    const response = await apiClient.post("/api/auth/verify-email", { email, verificationCode });
+    const response = await apiClient.post("/api/v1/auth/verify-email", { email, verificationCode });
     return response.data;
   },
 };
