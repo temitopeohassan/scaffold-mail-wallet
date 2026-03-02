@@ -51,7 +51,7 @@ let cachedHandler: ReturnType<typeof serverless> | null = null;
 export default async function handler(
   req: import('express').Request,
   res: import('express').Response
-): Promise<void | import('express').Response> {
+): Promise<unknown> {
   if (!cachedHandler) {
     const app = await createApp();
     cachedHandler = serverless(app);
