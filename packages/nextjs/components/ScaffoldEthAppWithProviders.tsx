@@ -45,13 +45,22 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
     setMounted(true);
   }, []);
 
+  // Wagmi/RainbowKit connectors use indexedDB; only render them on the client to avoid "indexedDB is not defined" during SSR
+  if (!mounted) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <main className="relative flex flex-1 flex-col">{children}</main>
+      </div>
+    );
+  }
+
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <ProgressBar height="3px" color="#2299dd" />
         <RainbowKitProvider
           avatar={BlockieAvatar}
-          theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
+          theme={isDarkMode ? darkTheme() : lightTheme()}
         >
           <ScaffoldEthApp>{children}</ScaffoldEthApp>
         </RainbowKitProvider>
