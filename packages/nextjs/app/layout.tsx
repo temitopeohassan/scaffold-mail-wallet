@@ -20,9 +20,9 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
     <html lang="en" data-theme="light" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider enableSystem>
-          <ScaffoldEthAppWithProviders>
-            <AuthProvider>
-              <WalletProvider>
+          <AuthProvider>
+            <WalletProvider>
+              <ScaffoldEthAppWithProviders>
                 <div className="min-h-screen bg-base-100">{children}</div>
                 <Toaster
                   position="top-right"
@@ -48,9 +48,9 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
                     },
                   }}
                 />
-              </WalletProvider>
-            </AuthProvider>
-          </ScaffoldEthAppWithProviders>
+              </ScaffoldEthAppWithProviders>
+            </WalletProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

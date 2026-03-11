@@ -4,11 +4,11 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { Clock, Copy, ExternalLink, LogOut, RefreshCw, Settings, Shield, TrendingUp, User, Wallet } from "lucide-react";
+import { Clock, Copy, ExternalLink, RefreshCw, Settings, Shield, TrendingUp, Wallet } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 export default function DashboardPage() {
-  const { user, loading, signOut } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [copying, setCopying] = useState(false);
@@ -41,11 +41,6 @@ export default function DashboardPage() {
     }
   };
 
-  const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -60,46 +55,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-base-200">
-      {/* Navigation */}
-      <div className="navbar bg-base-100 shadow-lg">
-        <div className="navbar-start">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Wallet className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold">EthWallet</span>
-          </div>
-        </div>
-
-        <div className="navbar-end">
-          <div className="dropdown dropdown-end">
-            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-              <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-                <User className="w-5 h-5 text-white" />
-              </div>
-            </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-            >
-              <li className="menu-title">
-                <span className="text-xs truncate">{user.email}</span>
-              </li>
-              <li>
-                <a>
-                  <Settings className="w-4 h-4" /> Settings
-                </a>
-              </li>
-              <li>
-                <a onClick={handleSignOut}>
-                  <LogOut className="w-4 h-4" /> Sign Out
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           {/* Welcome Header */}

@@ -30,13 +30,24 @@ export async function createApp(): Promise<Express> {
   setupMiddleware(app);
   setupRoutes(app);
 
+  const rootHtml = `
+    <!DOCTYPE html>
+    <html>
+      <head><meta charset="utf-8"><title>Scaffold Eth Wallet</title></head>
+      <body style="font-family:system-ui;max-width:40rem;margin:4rem auto;padding:2rem;text-align:center;">
+        <h1>Scaffold Eth Wallet is Running</h1>
+        <p><a href="/health">Health check</a></p>
+      </body>
+    </html>
+  `;
+
   app.get('/', (_req, res) => {
-    res.status(200).json({
-      name: 'Scaffold Mail Wallet API',
-      status: 'running',
-      health: '/health',
-      docs: '/api/v1',
-    });
+    res.status(200).type('html').send(rootHtml);
+  });
+
+  // Vercel rewrites all routes to /api, so requests to / hit the handler with path /api
+  app.get('/api', (_req, res) => {
+    res.status(200).type('html').send(rootHtml);
   });
 
   app.get('/health', (_req, res) => {

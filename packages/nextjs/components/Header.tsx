@@ -3,8 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOut, User, Wallet } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { LogOut, User, Wallet } from "lucide-react";
 
 export default function Header() {
   const router = useRouter();
@@ -39,7 +39,10 @@ export default function Header() {
                 <div className="text-xs text-base-content/60 max-w-40 truncate">{user.email}</div>
               </div>
             </div>
-            <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-56">
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-56"
+            >
               <li className="menu-title">
                 <span className="truncate">{user.email}</span>
               </li>
