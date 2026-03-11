@@ -115,12 +115,13 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, walletData, onClose, 
             </div>
 
             <div className="alert alert-warning mb-6">
-              <AlertTriangle className="w-5 h-5" />
+              <AlertTriangle className="w-5 h-5 shrink-0" />
               <div>
-                <h4 className="font-semibold">Important Security Notice</h4>
+                <h4 className="font-semibold">Important: Store your private key now</h4>
                 <p className="text-sm">
-                  This private key will only be shown ONCE. Make sure to save it securely. Anyone with access to this
-                  key can control your wallet.
+                  This private key will only be shown once and{" "}
+                  <strong>cannot be retrieved after you leave this screen</strong>. Save it in a secure location. Anyone
+                  with access to this key has full control of your wallet.
                 </p>
               </div>
             </div>

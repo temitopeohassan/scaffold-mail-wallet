@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import WalletModal from "@/components/WalletModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWallet } from "@/contexts/WalletContext";
+import { api } from "@/lib/api";
 import { CheckCircle2, Shield, Wallet, Zap } from "lucide-react";
 import { toast } from "react-hot-toast";
 
@@ -12,6 +13,8 @@ export default function CreateWalletPage() {
   const { user, loading: authLoading } = useAuth();
   const { generateWallet, walletData, loading: walletLoading, activateUser, clearWallet } = useWallet();
   const [showModal, setShowModal] = useState(false);
+  const [needsWallet, setNeedsWallet] = useState<boolean | null>(null);
+  const hasStartedCreation = useRef(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -27,16 +30,40 @@ export default function CreateWalletPage() {
     }
   }, [user, authLoading, router]);
 
+  // Check if user already has a wallet; if yes redirect to dashboard
+  useEffect(() => {
+    if (authLoading || !user || !user.emailVerified) return;
+    let cancelled = false;
+    api
+      .getProfile()
+      .then(res => {
+        if (cancelled) return;
+        const hasWallet = !!(res.success && res.data?.walletAddress);
+        setNeedsWallet(!hasWallet);
+        if (hasWallet) router.push("/dashboard");
+      })
+      .catch(() => setNeedsWallet(true));
+    return () => {
+      cancelled = true;
+    };
+  }, [user, authLoading, router]);
+
+  // On first login (needsWallet === true), auto-create wallet and show modal with private key
+  useEffect(() => {
+    if (needsWallet !== true || !user?.uid || walletData || hasStartedCreation.current) return;
+    hasStartedCreation.current = true;
+    generateWallet(user.uid).then(wallet => {
+      if (wallet) setShowModal(true);
+    });
+  }, [needsWallet, user?.uid, walletData, generateWallet]);
+
   const handleCreateWallet = async () => {
     if (!user) {
       toast.error("Please sign in first");
       return;
     }
-
     const wallet = await generateWallet(user.uid);
-    if (wallet) {
-      setShowModal(true);
-    }
+    if (wallet) setShowModal(true);
   };
 
   const handleWalletComplete = async () => {
@@ -49,7 +76,7 @@ export default function CreateWalletPage() {
     }
   };
 
-  if (authLoading) {
+  if (authLoading || needsWallet === null) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <span className="loading loading-spinner loading-lg text-primary"></span>
@@ -59,6 +86,23 @@ export default function CreateWalletPage() {
 
   if (!user) {
     return null; // Will redirect
+  }
+
+  // First login: wallet is being created — show loading until modal opens
+  if (needsWallet && (walletLoading || !walletData)) {
+    return (
+      <div className="min-h-screen gradient-bg flex flex-col items-center justify-center gap-6 px-4">
+        <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center shadow-2xl">
+          <Wallet className="w-10 h-10 text-white" />
+        </div>
+        <h1 className="text-2xl font-bold text-center">Creating your wallet</h1>
+        <p className="text-base-content/70 text-center max-w-md">
+          Your secure Ethereum wallet is being generated. You will see your private key in the next step — save it
+          securely; it cannot be retrieved again.
+        </p>
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    );
   }
 
   return (

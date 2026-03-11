@@ -21,7 +21,7 @@ export default function SignupPage() {
 
   useEffect(() => {
     if (user && user.emailVerified) {
-      router.push("/wallet/create");
+      router.push("/auth/login");
     }
   }, [user, router]);
 

@@ -34,8 +34,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(false);
       return;
     }
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async firebaseUser => {
+      setUser(firebaseUser);
+      if (typeof window !== "undefined") {
+        if (firebaseUser) {
+          try {
+            const token = await firebaseUser.getIdToken();
+            localStorage.setItem("firebaseToken", token);
+          } catch {
+            localStorage.removeItem("firebaseToken");
+          }
+        } else {
+          localStorage.removeItem("firebaseToken");
+        }
+      }
       setLoading(false);
     });
 

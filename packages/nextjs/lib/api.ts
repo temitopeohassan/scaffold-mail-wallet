@@ -25,6 +25,16 @@ export interface WalletData {
   privateKey: string;
 }
 
+export interface UserProfile {
+  uid: string;
+  email: string;
+  emailVerified: boolean;
+  walletAddress?: string;
+  activated: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   data?: T;
@@ -48,6 +58,12 @@ export const api = {
   // Activate user
   activateUser: async (walletAddress: string): Promise<ApiResponse<void>> => {
     const response = await apiClient.post("/api/v1/user/activate", { walletAddress });
+    return response.data;
+  },
+
+  // Get user profile (includes walletAddress if set)
+  getProfile: async (): Promise<ApiResponse<UserProfile>> => {
+    const response = await apiClient.get("/api/v1/user/profile");
     return response.data;
   },
 
