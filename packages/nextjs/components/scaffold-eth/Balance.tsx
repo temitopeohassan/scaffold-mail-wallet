@@ -5,12 +5,22 @@ import { formatEther } from "viem";
 import { useWatchBalance } from "~~/hooks/scaffold-eth/useWatchBalance";
 
 type BalanceProps = {
-  address: AddressType | string;
+  address?: AddressType | string;
   className?: string;
 };
 
 export const Balance = ({ address, className = "" }: BalanceProps) => {
-  const { data: balance, isError, isLoading } = useWatchBalance({ address: address as AddressType });
+  const {
+    data: balance,
+    isError,
+    isLoading,
+  } = useWatchBalance({
+    address: address as AddressType | undefined,
+  });
+
+  if (!address) {
+    return <span className={className}>0 ETH</span>;
+  }
 
   if (isLoading) {
     return <span className={className}>...</span>;

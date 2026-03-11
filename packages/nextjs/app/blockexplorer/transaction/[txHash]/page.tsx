@@ -6,10 +6,7 @@ type PageProps = {
   params: Promise<{ txHash?: string }>;
 };
 
-export function generateStaticParams() {
-  // An workaround to enable static exports in Next.js, generating single dummy page.
-  return [{ txHash: "0x0000000000000000000000000000000000000000" }];
-}
+export const dynamic = "force-dynamic";
 
 const TransactionPage = async ({ params }: PageProps) => {
   const { txHash: rawTxHash } = await params;
