@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { auth } from "@/lib/firebase";
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, signOut } from "firebase/auth";
 import { ArrowLeft, Eye, EyeOff, Mail, Wallet } from "lucide-react";
 import { toast } from "react-hot-toast";
 
@@ -66,6 +66,7 @@ export default function SignupPage() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await sendEmailVerification(userCredential.user);
+      await signOut(auth);
       setEmailSent(true);
       toast.success("Account created! Please check your email for verification.");
     } catch (error: any) {

@@ -27,6 +27,30 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, walletData, onClose, 
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation();
+        toast.error(
+          "Finish setup and check the box to confirm you saved your private key. You cannot close this until then.",
+        );
+      }
+    };
+    window.addEventListener("keydown", onKeyDown, true);
+    return () => window.removeEventListener("keydown", onKeyDown, true);
+  }, [isOpen]);
+
   const copyToClipboard = async (text: string, type: "address" | "key") => {
     try {
       await navigator.clipboard.writeText(text);
@@ -56,8 +80,24 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, walletData, onClose, 
   if (!isOpen) return null;
 
   return (
-    <div className="modal modal-open">
-      <div className="modal-box w-11/12 max-w-2xl">
+    <div
+      className="modal modal-open"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="wallet-modal-title"
+      onMouseDown={e => {
+        if (e.target === e.currentTarget) {
+          e.preventDefault();
+          toast.error(
+            "You must complete setup and confirm you saved your private key. This window cannot be dismissed until then.",
+          );
+        }
+      }}
+    >
+      <div className="modal-box w-11/12 max-w-2xl max-h-[90vh] overflow-y-auto" onMouseDown={e => e.stopPropagation()}>
+        <h2 id="wallet-modal-title" className="sr-only">
+          Secure your new wallet — save your private key before continuing
+        </h2>
         {/* Progress Steps */}
         <div className="steps steps-horizontal w-full mb-8">
           <div className={`step ${currentStep >= 1 ? "step-primary" : ""}`}>Your Wallet</div>
