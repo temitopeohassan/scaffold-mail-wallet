@@ -64,10 +64,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (response.success) {
         toast.success("Account activated successfully!");
         return true;
-      } else {
-        toast.error(response.error || "Failed to activate account");
-        return false;
       }
+      toast.error(response.message || "Failed to activate account");
+      return false;
     } catch (error) {
       console.error("Account activation error:", error);
       toast.error("Failed to activate account");

@@ -25,6 +25,8 @@ export class WalletService {
         mnemonic: mnemonic
       };
 
+      await this.storeWalletAddress(userId, wallet.address);
+
       logger.info('Wallet generated', {
         userId,
         walletAddress: wallet.address
@@ -56,11 +58,14 @@ export class WalletService {
         updatedAt: new Date()
       });
 
-      // Update user document with wallet address
-      await getFirestore().collection(COLLECTIONS.USERS).doc(userId).update({
-        walletAddress,
-        updatedAt: new Date()
-      });
+      // Update user document with wallet address (merge so it works if doc was just created elsewhere)
+      await getFirestore().collection(COLLECTIONS.USERS).doc(userId).set(
+        {
+          walletAddress,
+          updatedAt: new Date()
+        },
+        { merge: true }
+      );
 
       logger.info('Wallet address stored successfully', {
         userId,

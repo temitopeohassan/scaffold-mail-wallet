@@ -42,6 +42,12 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
+export type ActivateUserApiResponse = {
+  success: boolean;
+  message?: string;
+  walletAddress?: string;
+};
+
 export const api = {
   // Generate new wallet
   generateWallet: async (userId: string): Promise<ApiResponse<WalletData>> => {
@@ -56,7 +62,7 @@ export const api = {
   },
 
   // Activate user
-  activateUser: async (walletAddress: string): Promise<ApiResponse<void>> => {
+  activateUser: async (walletAddress: string): Promise<ActivateUserApiResponse> => {
     const response = await apiClient.post("/api/v1/user/activate", { walletAddress });
     return response.data;
   },

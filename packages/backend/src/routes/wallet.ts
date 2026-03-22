@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import { authenticateToken, requireEmailVerification } from '../middleware/auth';
 import { validateRequest, schemas } from '../middleware/validation';
+import { UserService } from '../services/userService';
 import { WalletService } from '../services/walletService';
 import { logger } from '../utils/logger';
 import { AuthenticatedRequest } from '../types';
 
 const router = Router();
 const walletService = new WalletService();
+const userService = new UserService();
 
 // Generate new wallet
 router.post(
@@ -28,8 +30,10 @@ router.post(
         return;
       }
 
+      await userService.getUserProfile(userId);
+
       const walletData = await walletService.generateWallet(userId);
-      
+
       logger.info('Wallet generated successfully', {
         userId,
         walletAddress: walletData.walletAddress

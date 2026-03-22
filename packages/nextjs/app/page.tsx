@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { api } from "@/lib/api";
 import { ArrowRight, Shield, Users, Wallet, Zap } from "lucide-react";
 
 export default function HomePage() {
@@ -11,12 +12,30 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && user) {
-      router.push("/dashboard");
-    }
+    if (loading || !user) return;
+
+    let cancelled = false;
+
+    api
+      .getProfile()
+      .then(res => {
+        if (cancelled) return;
+        if (res.success && res.data?.walletAddress) {
+          router.replace("/dashboard");
+        } else {
+          router.replace("/wallet/create");
+        }
+      })
+      .catch(() => {
+        if (!cancelled) router.replace("/wallet/create");
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [user, loading, router]);
 
-  if (loading) {
+  if (loading || user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <span className="loading loading-spinner loading-lg text-primary"></span>
@@ -26,7 +45,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen gradient-bg">
-      {/* Hero Section */}
       <div className="hero min-h-[80vh]">
         <div className="hero-content text-center">
           <div className="max-w-4xl">
@@ -53,7 +71,6 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Features Grid */}
             <div className="grid md:grid-cols-3 gap-8 mt-16">
               <div className="card bg-base-100 shadow-xl card-hover">
                 <div className="card-body text-center">
