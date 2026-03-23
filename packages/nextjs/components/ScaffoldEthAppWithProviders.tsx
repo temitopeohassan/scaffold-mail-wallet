@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
@@ -39,21 +38,9 @@ export const queryClient = new QueryClient({
 export const ScaffoldEthAppWithProviders = ({ children }: { children: React.ReactNode }) => {
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Wagmi/RainbowKit connectors use indexedDB; only render them on the client to avoid "indexedDB is not defined" during SSR
-  if (!mounted) {
-    return (
-      <div className="flex min-h-screen flex-col">
-        <main className="relative flex flex-1 flex-col">{children}</main>
-      </div>
-    );
-  }
-
+  // Always wrap with WagmiProvider so hooks (e.g. dashboard) work during SSR/prerender.
+  // wagmiConfig uses ssr: true; deferring WagmiProvider caused "WagmiProviderNotFoundError" on static generation.
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
