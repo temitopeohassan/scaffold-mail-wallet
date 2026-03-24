@@ -1,9 +1,7 @@
-import { getPublicClient } from "@wagmi/core";
-import { Hash, SendTransactionParameters, TransactionReceipt, WalletClient } from "viem";
+import { Hash, SendTransactionParameters, TransactionReceipt, WalletClient, createPublicClient } from "viem";
 import { Config, useWalletClient } from "wagmi";
 import { SendTransactionMutate } from "wagmi/query";
-import { wagmiConfig } from "~~/services/web3/wagmiConfig";
-import { getBlockExplorerTxLink, getParsedError, notification } from "~~/utils/scaffold-eth";
+import { getBlockExplorerTxLink, getParsedError, getScaffoldRpcTransport, notification } from "~~/utils/scaffold-eth";
 import { TransactorFuncOptions } from "~~/utils/scaffold-eth/contract";
 
 type TransactionFunc = (
@@ -52,8 +50,17 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
     let blockExplorerTxURL = "";
     try {
       const network = await walletClient.getChainId();
-      // Get full transaction from public client
-      const publicClient = getPublicClient(wagmiConfig);
+      const chain = walletClient.chain;
+      if (!chain) {
+        notification.error("Cannot resolve chain for transaction");
+        return;
+      }
+      // Wagmi's WalletClient may expose `transport` in a shape viem's createPublicClient won't accept.
+      // Use the same RPC selection as the rest of the app so receipt polling always works.
+      const publicClient = createPublicClient({
+        chain,
+        transport: getScaffoldRpcTransport(chain.id),
+      });
 
       notificationId = notification.loading(<TxnNotification message="Awaiting for user confirmation" />);
       if (typeof tx === "function") {

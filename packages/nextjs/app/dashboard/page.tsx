@@ -3,17 +3,18 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { usePublicClient } from "wagmi";
-import { formatEther } from "viem";
+import { SendEthCard } from "@/components/SendEthCard";
 import { useAuth } from "@/contexts/AuthContext";
-import { api, type UserProfile } from "@/lib/api";
-import { useWatchBalance } from "~~/hooks/scaffold-eth/useWatchBalance";
-import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
-import { useGlobalState } from "~~/services/store/store";
-import { getBlockExplorerAddressLink } from "~~/utils/scaffold-eth";
+import { type UserProfile, api } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 import { Clock, Copy, ExternalLink, RefreshCw, Settings, Shield, TrendingUp, Wallet } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { formatEther } from "viem";
+import { usePublicClient } from "wagmi";
+import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+import { useWatchBalance } from "~~/hooks/scaffold-eth/useWatchBalance";
+import { useGlobalState } from "~~/services/store/store";
+import { getBlockExplorerAddressLink } from "~~/utils/scaffold-eth";
 
 export default function DashboardPage() {
   const { user, loading: authLoading } = useAuth();
@@ -29,7 +30,11 @@ export default function DashboardPage() {
 
   const walletAddress = profile?.walletAddress;
 
-  const { data: balanceData, isLoading: balanceLoading, refetch: refetchBalance } = useWatchBalance({
+  const {
+    data: balanceData,
+    isLoading: balanceLoading,
+    refetch: refetchBalance,
+  } = useWatchBalance({
     address: walletAddress as `0x${string}` | undefined,
     chainId: targetNetwork.id,
     query: { enabled: Boolean(walletAddress) },
@@ -39,8 +44,7 @@ export default function DashboardPage() {
 
   const { data: txNonce } = useQuery({
     queryKey: ["dashboard-tx-count", walletAddress, targetNetwork.id],
-    queryFn: () =>
-      publicClient!.getTransactionCount({ address: walletAddress as `0x${string}` }),
+    queryFn: () => publicClient!.getTransactionCount({ address: walletAddress as `0x${string}` }),
     enabled: Boolean(publicClient && walletAddress),
   });
 
@@ -50,8 +54,7 @@ export default function DashboardPage() {
     return parseFloat(formatEther(ethBalance));
   }, [ethBalance]);
 
-  const usdEstimate =
-    ethFormatted !== null && nativeCurrencyPrice > 0 ? ethFormatted * nativeCurrencyPrice : null;
+  const usdEstimate = ethFormatted !== null && nativeCurrencyPrice > 0 ? ethFormatted * nativeCurrencyPrice : null;
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -194,13 +197,13 @@ export default function DashboardPage() {
               </div>
               <div className="stat-title">Account</div>
               <div className="stat-value text-info text-sm"> {profile?.activated ? "Activated" : "Pending"} </div>
-              <div className="stat-desc">
-                {user.emailVerified ? "Email verified" : "Email not verified"}
-              </div>
+              <div className="stat-desc">{user.emailVerified ? "Email verified" : "Email not verified"}</div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <SendEthCard ethWalletAddress={walletAddress} onSent={() => void refetchBalance()} />
+
             <div className="card bg-base-100 shadow-lg">
               <div className="card-body">
                 <h2 className="card-title">
@@ -270,11 +273,7 @@ export default function DashboardPage() {
                 <h2 className="card-title">Quick Actions</h2>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-outline"
-                    onClick={() => void refetchBalance()}
-                  >
+                  <button type="button" className="btn btn-primary btn-outline" onClick={() => void refetchBalance()}>
                     <RefreshCw className="w-4 h-4" />
                     Refresh Balance
                   </button>
@@ -313,7 +312,7 @@ export default function DashboardPage() {
                   <h3 className="font-semibold">Getting Started</h3>
                   <ul className="text-sm space-y-1 text-base-content/70">
                     <li>• Add funds to your wallet to get started</li>
-                    <li>• Import your wallet into MetaMask or other apps</li>
+                    <li>• Use Send: connect a wallet to transfer ETH (import your EthWallet private key into MetaMask to use the same address)</li>
                     <li>• Explore DeFi applications and NFT marketplaces</li>
                     <li>• Keep your private key secure and backed up</li>
                   </ul>
@@ -347,12 +346,7 @@ export default function DashboardPage() {
                       Open in explorer
                     </Link>
                   ) : (
-                    <a
-                      href={explorerHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-primary btn-sm"
-                    >
+                    <a href={explorerHref} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-sm">
                       Open in explorer
                     </a>
                   )}

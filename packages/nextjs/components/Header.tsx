@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { NetworkSwitch } from "@/components/NetworkSwitch";
 import { LogOut, User, Wallet } from "lucide-react";
 
 export default function Header() {
@@ -24,6 +25,9 @@ export default function Header() {
           </div>
           <span className="text-xl font-bold">ScaffoldEth Wallet</span>
         </Link>
+      </div>
+      <div className="navbar-center flex flex-1 justify-center px-2 min-w-0">
+        <NetworkSwitch />
       </div>
       <div className="navbar-end">
         {loading ? (
