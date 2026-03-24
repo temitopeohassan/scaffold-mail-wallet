@@ -312,7 +312,10 @@ export default function DashboardPage() {
                   <h3 className="font-semibold">Getting Started</h3>
                   <ul className="text-sm space-y-1 text-base-content/70">
                     <li>• Add funds to your wallet to get started</li>
-                    <li>• Use Send: connect a wallet to transfer ETH (import your EthWallet private key into MetaMask to use the same address)</li>
+                    <li>
+                      • Use Send: connect a wallet to transfer ETH (import your EthWallet private key into MetaMask to
+                      use the same address)
+                    </li>
                     <li>• Explore DeFi applications and NFT marketplaces</li>
                     <li>• Keep your private key secure and backed up</li>
                   </ul>

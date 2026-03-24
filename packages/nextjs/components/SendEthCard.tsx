@@ -245,12 +245,7 @@ export function SendEthCard({ ethWalletAddress, onSent }: SendEthCardProps) {
               <label className="label py-1">
                 <span className="label-text">Amount</span>
               </label>
-              <EtherInput
-                placeholder="0.0"
-                value={amount}
-                onChange={setAmount}
-                disabled={sending || !isUnlocked}
-              />
+              <EtherInput placeholder="0.0" value={amount} onChange={setAmount} disabled={sending || !isUnlocked} />
             </div>
           </div>
 

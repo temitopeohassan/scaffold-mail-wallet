@@ -3,8 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
 import { NetworkSwitch } from "@/components/NetworkSwitch";
+import { useAuth } from "@/contexts/AuthContext";
 import { LogOut, User, Wallet } from "lucide-react";
 
 export default function Header() {
