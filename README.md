@@ -69,6 +69,42 @@ Run smart contract test with `yarn hardhat:test`
 - Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
 - Edit your deployment scripts in `packages/hardhat/deploy`
 
+## Backend
+
+This project includes an **Express** API in `packages/backend` (TypeScript) for EthWallet features such as Firebase-backed authentication. The frontend calls it using `NEXT_PUBLIC_API_URL` (default `http://localhost:5000`). You can use **Debug Contracts** and the block explorer without the backend; sign-in and dashboard flows need the API (and Firebase) when enabled.
+
+### Requirements
+
+- The same prerequisites as the rest of the repo: Node (>= v20.18.3), Yarn, and Git (see [Requirements](#requirements) above).
+- **Firebase Admin** environment variables under `packages/backend` if you want full auth against Firebase. Configure the variables expected in `packages/backend/src/config/firebase.ts`. Omit them only if you are not exercising authenticated routes.
+
+### Run locally
+
+1. From the repository root, install dependencies (if you have not already):
+
+```
+yarn install
+```
+
+2. Add a `packages/backend/.env` file. Set `PORT` if you need something other than `5000`, and `CORS_ORIGIN` if the frontend is not at `http://localhost:3000`. Add Firebase Admin fields when using auth.
+
+3. Start the API in development (reload on change):
+
+```
+yarn backend
+```
+
+The server listens on `http://localhost:5000` by default.
+
+4. Point the Next.js app at the API. In `packages/nextjs/.env` or `.env.local`, set:
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:5000
+```
+
+5. In another terminal, run `yarn start` for the frontend.
+
+For a production-style run: `yarn backend:build` then `yarn backend:start`.
 
 ## Documentation
 
